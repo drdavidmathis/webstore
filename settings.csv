@@ -1,0 +1,21 @@
+key,value,notes
+store_name,Store Name,Shown in the header logo and footer
+tagline,Sound for every day,Short line under the catalog heading
+brand_color,#1E3A5F,Main color for buttons and links (hex)
+accent_color,#D9822B,Secondary color for small highlights (hex)
+category_title,Over-Ear Wireless Headphones,Heading above the product grid
+category_subtitle,Choose your color. Free returns within 30 days.,Line under the heading
+nav_items,Shop All|Headphones|New Arrivals|Support,Menu labels separated by |. All lead to the product catalog.
+currency_symbol,$,
+after_add,cart,"What happens after Add to Cart: cart (go to cart page) or stay (stay on product page)"
+cart_shipping_label,Shipping,Label for the shipping row in the cart
+cart_shipping_value,Calculated at checkout,Value for the shipping row in the cart
+checkout_label,Proceed to Checkout,Text on the (inactive) checkout button
+reviews_enabled,FALSE,TRUE shows star ratings and reviews from the products sheet
+promo_banner_enabled,FALSE,TRUE shows a banner across the top of every page
+promo_banner_text,Limited time: 15% off all headphones,Banner text
+promo_badges_enabled,FALSE,"TRUE shows badges and compare-at (strikethrough) prices from the products sheet"
+free_shipping_notice_enabled,FALSE,TRUE shows a free shipping line on product and cart pages
+free_shipping_notice_text,Free standard shipping on orders over $50,Free shipping line text
+footer_text,Questions? Our support team is here to help.,Short line in the footer
+product_set_label,headphones_v1,Recorded in the data so you know which product set a respondent saw

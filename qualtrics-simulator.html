@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Qualtrics Simulator</title>
+<style>
+:root{--bg:#F2F3F5;--panel:#fff;--ink:#1B1F24;--soft:#5A6270;--line:#DADDE2;--q:#0B6FB8;color-scheme:light}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif}
+.top{background:#1B1F24;color:#fff;padding:12px 20px;display:flex;flex-wrap:wrap;gap:14px;align-items:center}
+.top b{font-size:15px}
+.top select,.top button{font:inherit;padding:5px 8px;border-radius:6px;border:1px solid #444;background:#2A2F36;color:#fff}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:20px;padding:20px;max-width:1500px;margin:0 auto}
+@media (max-width:1000px){.layout{grid-template-columns:1fr}}
+.survey{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:24px}
+.survey p{margin:0 0 14px;color:var(--soft)}
+iframe{width:100%;height:820px;border:1px solid #E3E6EA;border-radius:8px;display:block}
+.nav{display:flex;justify-content:flex-end;margin-top:18px}
+.next{background:var(--q);color:#fff;border:0;border-radius:4px;padding:10px 26px;font:600 15px system-ui;cursor:pointer}
+.side{background:#14171B;color:#D7DCE2;border-radius:6px;font:12px/1.45 ui-monospace,Menlo,Consolas,monospace;padding:14px;max-height:calc(100vh - 100px);overflow:auto;position:sticky;top:20px}
+.side h3{color:#fff;font-size:12px;text-transform:uppercase;letter-spacing:.06em;margin:4px 0 8px}
+.side table{width:100%;border-collapse:collapse}
+.side td{padding:3px 0;border-bottom:1px solid #22272E;vertical-align:top;word-break:break-word}
+.side td:first-child{color:#8FA3B8;width:48%;padding-right:8px;word-break:break-all}
+.done{background:#E7F4EC;border:1px solid #B9DEC7;color:#1F5C38;padding:14px;border-radius:6px}
+</style>
+</head>
+<body>
+<div class="top"><b>Qualtrics simulator</b>
+  <label>Condition <select id="cond"><option>1</option><option>2</option><option>3</option><option>4</option></select></label>
+  <button id="reload">Start new respondent</button>
+  <span style="opacity:.7">Mimics the survey question: hidden Next button and embedded data.</span>
+</div>
+<div class="layout">
+  <div class="survey" id="survey">
+    <p>Imagine you are shopping online for a new pair of headphones. Browse the store below and add the pair you would choose to your cart.</p>
+    <iframe id="frame" title="Online store"></iframe>
+    <div class="nav"><button class="next" id="next" hidden>Next →</button></div>
+  </div>
+  <aside class="side"><h3>Embedded data received</h3><table id="tbl"><tr><td>waiting for store…</td><td></td></tr></table></aside>
+</div>
+<script>
+var ED = {};
+function load(){
+  ED = {};
+  var rid = "R_test" + Math.random().toString(36).slice(2,8);
+  document.getElementById("frame").src = "index.html?cond=" + encodeURIComponent(document.getElementById("cond").value) + "&rid=" + rid;
+  document.getElementById("next").hidden = true;
+}
+window.addEventListener("message", function(ev){
+  var d = ev.data; if (!d || d.source !== "mockstore") return;
+  if (d.type === "error"){ ED.store_load_error = d.message; document.getElementById("next").hidden = false; }
+  else { Object.assign(ED, d.fields); document.getElementById("next").hidden = !d.cartReady; }
+  var rows = Object.keys(ED).map(function(k){
+    var v = String(ED[k]); if (k === "store_event_log" && v.length > 300) v = v.slice(0,300) + "… (" + v.length + " chars)";
+    return "<tr><td>"+k+"</td><td>"+v.replace(/</g,"&lt;")+"</td></tr>";
+  }).join("");
+  document.getElementById("tbl").innerHTML = rows;
+});
+document.getElementById("next").onclick = function(){
+  document.getElementById("survey").innerHTML = "<div class='done'><b>Next page.</b> In the real survey, this is where the abandonment scenario would begin. The final data is in the panel on the right.</div>";
+};
+document.getElementById("reload").onclick = load;
+document.getElementById("cond").onchange = load;
+load();
+</script>
+</body>
+</html>
